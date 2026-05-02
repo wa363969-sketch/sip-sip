@@ -1,0 +1,23 @@
+{
+  "overview": "A 3D chibi-style miniature Starbucks-themed online food delivery app with an interactive animated store hero, pre-loaded menu, cart, Stripe checkout, real-time order tracking, and admin panel.",
+  "features": [
+    "Interactive 3D chibi miniature Starbucks store hero with click-to-enter",
+    "Pre-loaded Starbucks menu: hot drinks, cold drinks, frappuccinos, food items",
+    "Cart, checkout, and Stripe payment integration",
+    "Real-time order tracking: placed → preparing → ready → picked up",
+    "Admin panel for product and order management",
+    "Internet Identity login with role-based access"
+  ],
+  "category": "e-commerce",
+  "tags": [
+    "starbucks",
+    "food-delivery",
+    "3d",
+    "chibi",
+    "ordering",
+    "admin",
+    "stripe",
+    "internet-identity"
+  ],
+  "last_updated": "2026-05-02T15:48:28.459Z"
+}

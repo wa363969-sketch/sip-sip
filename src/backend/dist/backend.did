@@ -1,0 +1,147 @@
+type http_request_result = 
+ record {
+   body: blob;
+   headers: vec http_header;
+   status: nat;
+ };
+type http_header = 
+ record {
+   name: text;
+   value: text;
+ };
+type UserRole = 
+ variant {
+   admin;
+   guest;
+   user;
+ };
+type TransformationOutput = 
+ record {
+   body: blob;
+   headers: vec http_header;
+   status: nat;
+ };
+type TransformationInput = 
+ record {
+   context: blob;
+   response: http_request_result;
+ };
+type Timestamp = int;
+type StripeSessionStatus = 
+ variant {
+   completed: record {
+                response: text;
+                userPrincipal: opt text;
+              };
+   failed: record {error: text;};
+ };
+type StripeConfiguration = 
+ record {
+   allowedCountries: vec text;
+   secretKey: text;
+ };
+type ShoppingItem = 
+ record {
+   currency: text;
+   priceInCents: nat;
+   productDescription: text;
+   productName: text;
+   quantity: nat;
+ };
+type Product = 
+ record {
+   available: bool;
+   category: Category;
+   description: text;
+   id: text;
+   imageUrl: text;
+   name: text;
+   nutritionalInfo: NutritionalInfo;
+   priceInCents: nat;
+ };
+type OrderStatus = 
+ variant {
+   pickedUp;
+   placed;
+   preparing;
+   ready;
+ };
+type OrderItem = 
+ record {
+   priceInCents: nat;
+   productId: text;
+   productName: text;
+   quantity: nat;
+ };
+type OrderId = nat;
+type Order = 
+ record {
+   createdAt: Timestamp;
+   customerId: principal;
+   estimatedPickupMinutes: nat;
+   id: OrderId;
+   items: vec OrderItem;
+   status: OrderStatus;
+   stripeSessionId: opt text;
+   totalInCents: nat;
+   updatedAt: Timestamp;
+ };
+type NutritionalInfo = 
+ record {
+   calories: nat;
+   carbs: float64;
+   fat: float64;
+   protein: float64;
+ };
+type Category = 
+ variant {
+   coldDrinks;
+   food;
+   frappuccinos;
+   hotDrinks;
+ };
+type CartItem = 
+ record {
+   priceInCents: nat;
+   productId: text;
+   productName: text;
+   quantity: nat;
+ };
+type Cart = 
+ record {
+   items: vec CartItem;
+   totalInCents: nat;
+ };
+service : {
+  _initializeAccessControl: () -> ();
+  _orderTransform: (input: TransformationInput) ->
+   (TransformationOutput) query;
+  addToCart: (item: CartItem) -> ();
+  adminAddProduct: (product: Product) -> ();
+  adminDeleteProduct: (id: text) -> ();
+  adminGetAllOrders: () -> (vec Order) query;
+  adminSetProductAvailability: (id: text, available: bool) -> ();
+  adminUpdateOrderStatus: (id: OrderId, status: OrderStatus) -> ();
+  adminUpdateProduct: (product: Product) -> ();
+  assignCallerUserRole: (user: principal, role: UserRole) -> ();
+  checkout: (successUrl: text, cancelUrl: text) -> (text);
+  clearMyCart: () -> ();
+  confirmOrder: (stripeSessionId: text) -> (Order);
+  createCheckoutSession: (items: vec ShoppingItem, successUrl: text,
+   cancelUrl: text) -> (text);
+  getCallerUserRole: () -> (UserRole) query;
+  getMenuItem: (id: text) -> (opt Product) query;
+  getMenuItems: () -> (vec Product) query;
+  getMenuItemsByCategory: (category: Category) -> (vec Product) query;
+  getMyCart: () -> (Cart) query;
+  getMyOrder: (id: OrderId) -> (opt Order) query;
+  getMyOrders: () -> (vec Order) query;
+  getStripeSessionStatus: (sessionId: text) -> (StripeSessionStatus);
+  isCallerAdmin: () -> (bool) query;
+  isStripeConfigured: () -> (bool) query;
+  removeFromCart: (productId: text) -> ();
+  searchMenuItems: (term: text) -> (vec Product) query;
+  setStripeConfiguration: (config: StripeConfiguration) -> ();
+  transform: (input: TransformationInput) -> (TransformationOutput) query;
+  updateCartItem: (productId: text, quantity: nat) -> ();
+}

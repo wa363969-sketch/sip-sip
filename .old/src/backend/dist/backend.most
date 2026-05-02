@@ -1,0 +1,82 @@
+// Version: 1.0.0
+type CartItem__1044444615 =
+  {priceInCents : Nat; productId : Text; productName : Text; quantity : Nat};
+type Category__227350253 = {#coldDrinks; #food; #frappuccinos; #hotDrinks};
+type Data__791452850<K, V> =
+  {var count : Nat__490723111; kvs : [var ?(K, V)]};
+type Internal__8484328<K, V> =
+  {children : [var ?Node__46230540<K, V>]; data : Data__791452850<K, V>};
+type Leaf__809889148<K, V> = {data : Data__791452850<K, V>};
+type List__415060402<T> = List__790383201<T>;
+type List__790383201<T> =
+  {
+    var blockIndex : Nat__490723111;
+    var blocks : [var [var ?T]];
+    var elementIndex : Nat__490723111
+  };
+type Map__158565046<K, V> = Map__297112838<K, V>;
+type Map__297112838<K, V> =
+  {var root : Node__46230540<K, V>; var size : Nat__490723111};
+type Map__605269027<K, V> = Map__158565046<K, V>;
+type Nat__490723111 = Nat__920180692;
+type Nat__920180692 = Nat;
+type Node__46230540<K, V> =
+  {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
+type NutritionalInfo__119269285 =
+  {calories : Nat; carbs : Float; fat : Float; protein : Float};
+type OrderId__197865225 = Nat;
+type OrderItem__970180480 =
+  {priceInCents : Nat; productId : Text; productName : Text; quantity : Nat};
+type OrderStatus__591380551 = {#pickedUp; #placed; #preparing; #ready};
+type Order__720360493 =
+  {
+    createdAt : Timestamp__301639476;
+    customerId : Principal;
+    estimatedPickupMinutes : Nat;
+    id : OrderId__197865225;
+    items : [OrderItem__970180480];
+    status : OrderStatus__591380551;
+    stripeSessionId : ?Text;
+    totalInCents : Nat;
+    updatedAt : Timestamp__301639476
+  };
+type Product__986497020 =
+  {
+    available : Bool;
+    category : Category__227350253;
+    description : Text;
+    id : Text;
+    imageUrl : Text;
+    name : Text;
+    nutritionalInfo : NutritionalInfo__119269285;
+    priceInCents : Nat
+  };
+type StripeConfiguration__87721349 =
+  {allowedCountries : [Text]; secretKey : Text};
+type Timestamp__301639476 = Int;
+type UserRole__1073662873 = {#admin; #guest; #user};
+actor {
+  stable accessControlState :
+    {
+      var adminAssigned : Bool;
+      userRoles : Map__605269027<Principal, UserRole__1073662873>
+    };
+  stable cartState :
+    {
+      var root : Node__46230540<Principal, [CartItem__1044444615]>;
+      var size : Nat__490723111
+    };
+  stable menuState :
+    {
+      var root : Node__46230540<Text, Product__986497020>;
+      var size : Nat__490723111
+    };
+  stable orderState :
+    {
+      nextId : {var val : Nat};
+      orders : Map__605269027<OrderId__197865225, Order__720360493>;
+      userOrders :
+        Map__605269027<Principal, List__415060402<OrderId__197865225>>
+    };
+  stable var stripeConfiguration : ?StripeConfiguration__87721349
+};
